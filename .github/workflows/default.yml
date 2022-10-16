@@ -18,8 +18,6 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - molecule_distro: 'redhat/ubi8'
-            experimental: false
           - molecule_distro: 'rockylinux:8'
             experimental: false
           - molecule_distro: 'centos:7'
