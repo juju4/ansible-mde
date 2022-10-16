@@ -12,7 +12,9 @@
   register: semodules
 
 - name: Custom policy
-  when: "'wdavdaemon' not in semodules.stdout"
+  when:
+    - "'wdavdaemon' not in semodules.stdout"
+    - not is_container|bool
   block:
     - name: Update selinux policy for mdatp  # noqa no-changed-when
       ansible.builtin.command: audit2allow -i /var/log/audit/audit.log -M wdavdaemon
