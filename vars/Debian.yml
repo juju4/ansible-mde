@@ -2,3 +2,4 @@
 
 mde_deps:
   - gnupg
+  - systemd
