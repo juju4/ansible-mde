@@ -1,0 +1,14 @@
+---
+
+- name: Ensure /etc/opt/microsoft/mdatp/managed directory exists
+  ansible.builtin.file:
+    path: /etc/opt/microsoft/mdatp/managed
+    state: directory
+    mode: 0755
+
+- name: Ensure mdatp_managed.json is setup
+  ansible.builtin.template:
+    src: "{{ mde_managedjson_template }}"
+    dest: /etc/opt/microsoft/mdatp/managed/mdatp_managed.json
+    mode: 0644
+    validate: 'python3 -m json.tool %s'

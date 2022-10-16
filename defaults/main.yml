@@ -1,0 +1,9 @@
+---
+
+mde_channel: prod
+# file local to orchestrator
+mde_onboarding_zip: ''
+# mde_onboarding_zip: WindowsDefenderATPOnboardingPackage.zip
+
+mde_managed: true
+mde_managedjson_template: mdatp_managed.json.j2

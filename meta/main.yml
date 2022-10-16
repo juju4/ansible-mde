@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  role_name: mde
+  author: juju4
+  description: Setup Microsoft Defender for Endpoint
+  license: BSD
+  min_ansible_version: '1.9'
+  standalone: true
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - jammy
+        - focal
+        - bionic
+  galaxy_tags:
+    - system
+    - security
+dependencies: []

@@ -1,0 +1,30 @@
+---
+
+- name: Include specific variables per other os family
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Set fact is_container
+  ansible.builtin.set_fact:
+    is_container: true
+  when: >
+    (ansible_virtualization_type is defined and
+      (ansible_virtualization_type == "docker"
+       or ansible_virtualization_type == "containerd"
+       or ansible_virtualization_type == "container"
+      )
+    )
+
+- name: Import mde-add_repo
+  ansible.builtin.import_tasks: mde-add_repo.yml
+
+- name: Ensure mdatp package is present
+  ansible.builtin.package:
+    name: mdatp
+    state: present
+
+- name: Import mde-onboarding_setup
+  ansible.builtin.import_tasks: mde-onboarding_setup.yml
+
+- name: Import mde-managed
+  ansible.builtin.import_tasks: mde-managed.yml
+  when: mde_managed|bool

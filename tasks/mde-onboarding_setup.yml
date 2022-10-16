@@ -1,0 +1,31 @@
+---
+
+- name: Create MDATP directories
+  ansible.builtin.file:
+    path: /etc/opt/microsoft/mdatp
+    # recurse: true
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Register mdatp_onboard.json
+  ansible.builtin.stat:
+    path: /etc/opt/microsoft/mdatp/mdatp_onboard.json
+  register: mdatp_onboard
+
+- name: Ensure unzip is present
+  ansible.builtin.package:
+    name: unzip
+    state: present
+
+- name: Extract WindowsDefenderATPOnboardingPackage.zip into /etc/opt/microsoft/mdatp
+  ansible.builtin.unarchive:
+    src: "{{ mde_onboardig_zip }}"
+    dest: /etc/opt/microsoft/mdatp
+    mode: 0600
+    owner: root
+    group: root
+  when:
+    - not mdatp_onboard.stat.exists
+    - mde_onboarding_zip|string

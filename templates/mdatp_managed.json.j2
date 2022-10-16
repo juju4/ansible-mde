@@ -1,0 +1,68 @@
+{
+    "antivirusEngine": {
+        "enforcementLevel": "real_time",
+        "scanAfterDefinitionUpdate": true,
+        "scanArchives": true,
+        "maximumOnDemandScanThreads": 2,
+        "exclusionsMergePolicy": "merge",
+        "exclusions": [
+            {
+                "$type": "excludedPath",
+                "isDirectory": false,
+                "path": "/var/log/system.log<EXAMPLE DO NOT USE>"
+            },
+            {
+                "$type": "excludedPath",
+                "isDirectory": true,
+                "path": "/run<EXAMPLE DO NOT USE>"
+            },
+            {
+                "$type": "excludedPath",
+                "isDirectory": true,
+                "path": "/home/*/git<EXAMPLE DO NOT USE>"
+            },
+            {
+                "$type": "excludedFileExtension",
+                "extension": ".pdf<EXAMPLE DO NOT USE>"
+            },
+            {
+                "$type": "excludedFileName",
+                "name": "cat<EXAMPLE DO NOT USE>"
+            }
+        ],
+        "allowedThreats": [
+            "<EXAMPLE DO NOT USE>EICAR-Test-File (not a virus)"
+        ],
+        "disallowedThreatActions": [
+            "allow",
+            "restore"
+        ],
+        "threatTypeSettingsMergePolicy": "merge",
+        "threatTypeSettings": [
+            {
+                "key": "potentially_unwanted_application",
+                "value": "block"
+            },
+            {
+                "key": "archive_bomb",
+                "value": "audit"
+            }
+        ]
+    },
+    "cloudService": {
+        "enabled": true,
+        "diagnosticLevel": "optional",
+        "automaticSampleSubmissionConsent": "safe",
+        "automaticDefinitionUpdateEnabled": true,
+        "proxy": ""
+    },
+    "edr": {
+        "groupIds": "GroupIdExample",
+        "tags": [
+            {
+                "key": "GROUP",
+                "value": "Tag"
+            }
+        ]
+    }
+}
