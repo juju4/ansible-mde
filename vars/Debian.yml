@@ -3,3 +3,4 @@
 mde_deps:
   - gnupg
   - systemd
+  - python3

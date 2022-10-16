@@ -2,3 +2,6 @@
 
 mde_deps:
   - gnupg
+  - systemd
+  - python3
+  - selinux-policy-devel
