@@ -14,6 +14,11 @@
       )
     )
 
+- name: Ensure mde dependencies are present
+  ansible.builtin.package:
+    name: "{{ mde_deps }}"
+    state: present
+
 - name: Import mde-add_repo
   ansible.builtin.import_tasks: mde-add_repo.yml
 
