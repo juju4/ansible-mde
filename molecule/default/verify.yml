@@ -55,6 +55,10 @@
           ansible.builtin.assert:
             that: ansible_facts.packages['mdatp'][0]['version']|string is version_compare(mde_version, '>=')
 
+        - name: Find mdatp binaries
+          ansible.builtin.command: find /usr -iname mdatp
+          changed_when: false
+          failed_when: false
         - name: Get mdatp bin/symlink stats
           ansible.builtin.stat:
             path: "{{ mde_mdatp_path }}"
