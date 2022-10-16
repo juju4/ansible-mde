@@ -1,0 +1,27 @@
+---
+
+- name: Generate selinux policy for mdatp
+  ansible.builtin.command: sepolicy generate -n wdavdaemon --init /opt/microsoft/mdatp/sbin/wdavdaemon
+  args:
+    chdir: /root
+    creates: /root/wdavdaemon.pp
+
+- name: Get active semodule
+  ansible.builtin.command: semodule -l
+  changed_when: false
+  register: semodules
+
+- name: Custom policy
+  when: "'wdavdaemon' not in semodules.stdout"
+  block:
+    - name: Update selinux policy for mdatp  # noqa no-changed-when
+      ansible.builtin.command: audit2allow -i /var/log/audit/audit.log -M wdavdaemon
+      args:
+        chdir: /root
+
+    - name: Load selinux policy for mdatp  # noqa no-changed-when
+      ansible.builtin.command: semodule -i wdavdaemon.pp
+      args:
+        chdir: /root
+      notify:
+        - Restart mdatp

@@ -1,0 +1,8 @@
+---
+
+- name: Restart mdatp
+  ansible.builtin.service:
+    name: mdatp
+    state: restarted
+  when:
+    - not is_container|bool

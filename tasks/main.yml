@@ -39,3 +39,7 @@
 - name: Import mde-managed
   ansible.builtin.import_tasks: mde-managed.yml
   when: mde_managed|bool
+
+- name: Import redhat-selinux
+  ansible.builtin.import_tasks: redhat-selinux.yml
+  when: ansible_os_family == 'RedHat'

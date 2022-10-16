@@ -7,3 +7,5 @@ mde_onboarding_zip: ''
 
 mde_managed: true
 mde_managedjson_template: mdatp_managed.json.j2
+
+is_container: false
