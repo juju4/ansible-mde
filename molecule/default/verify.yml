@@ -11,7 +11,21 @@
     mde_passive_mode_enabled: false
     mde_healthy: false
     mde_license_onboarded: false
+    is_container: false
   pre_tasks:
+    - name: Debug | var ansible_virtualization_type
+      ansible.builtin.debug:
+        var: ansible_virtualization_type
+    - name: Set fact is_container
+      ansible.builtin.set_fact:
+        is_container: true
+      when: >
+        (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker"
+           or ansible_virtualization_type == "containerd"
+           or ansible_virtualization_type == "container"
+          )
+        )
     - name: Linux | Set fact
       ansible.builtin.set_fact:
         mde_dir: '/opt/microsoft/mdatp'
@@ -70,6 +84,8 @@
               - s_mdatp_path.stat.exists
               - s_mdatp_path.stat.islnk
               - s_mdatp_path.stat.pw_name == 'root'
+          when:
+            - not is_container|bool
 
         - name: Health | Get selinux information
           ansible.builtin.command: sestatus
@@ -376,6 +392,7 @@
               - not net.stderr|string
           when:
             - ansible_system == "Linux"
+            - mde_license_onboarded | bool
 
         - name: Logs | Get microsoft_defender.log
           ansible.builtin.stat:
@@ -388,6 +405,9 @@
               - s_log1.stat.exists
               - s_log1.stat.mode == '0660'
               - s_log1.stat.pw_name == mde_log_user
+          when:
+            - not (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
+            - not (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 22)
 
         - name: Logs | Get microsoft_defender_core.log
           ansible.builtin.stat:
