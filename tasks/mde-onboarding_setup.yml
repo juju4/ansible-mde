@@ -21,7 +21,7 @@
 
 - name: Extract WindowsDefenderATPOnboardingPackage.zip into /etc/opt/microsoft/mdatp
   ansible.builtin.unarchive:
-    src: "{{ mde_onboardig_zip }}"
+    src: "{{ mde_onboarding_zip }}"
     dest: /etc/opt/microsoft/mdatp
     mode: 0600
     owner: root
