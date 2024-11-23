@@ -5,7 +5,7 @@
     path: /etc/opt/microsoft/mdatp
     # recurse: true
     state: directory
-    mode: 0755
+    mode: '0755'
     owner: root
     group: root
 
@@ -23,7 +23,7 @@
   ansible.builtin.unarchive:
     src: "{{ mde_onboarding_zip }}"
     dest: /etc/opt/microsoft/mdatp
-    mode: 0600
+    mode: '0600'
     owner: root
     group: root
   when:
