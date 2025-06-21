@@ -49,6 +49,11 @@ $ MOLECULE_DISTRO=ubuntu:20.04 molecule test --destroy=never
 
 * MDE can cause performance issues. Most often it is related to auditd and an appropriate process exclusion will help.
 
+## Resources
+
+* [Common mistakes to avoid when defining exclusions, MDE](https://learn.microsoft.com/en-us/defender-endpoint/common-exclusion-mistakes-microsoft-defender-antivirus)
+* [Important points about exclusions](https://learn.microsoft.com/en-us/defender-endpoint/configure-exclusions-microsoft-defender-antivirus#important-points-about-exclusions)
+
 ## License
 
 BSD 2-clause
