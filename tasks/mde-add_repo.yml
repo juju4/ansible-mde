@@ -13,9 +13,9 @@
         cmd: |
           set -o pipefail
           curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee {{ mde_apt_key_path }} > /dev/null
-        args:
-          executable: /bin/bash
-          creates: "{{ mde_apt_key_path }}"
+      args:
+        executable: /bin/bash
+        creates: "{{ mde_apt_key_path }}"
 
     - name: Add Microsoft apt repository for MDATP
       ansible.builtin.deb822_repository:
