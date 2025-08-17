@@ -5,4 +5,4 @@ mde_deps:
   - systemd
   - python3
 
-mde_apt_key_path: /etc/apt/trusted.gpg.d/microsoft.gpg
+mde_apt_key_path: /usr/share/keyrings/microsoft-prod.gpg
