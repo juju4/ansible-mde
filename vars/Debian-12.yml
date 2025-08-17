@@ -4,5 +4,6 @@ mde_deps:
   - gnupg
   - systemd
   - python3
+  - python3-debian
 
 mde_apt_key_path: /usr/share/keyrings/microsoft-prod.gpg
