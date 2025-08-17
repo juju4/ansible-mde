@@ -7,11 +7,17 @@
   when: ansible_os_family == "Debian"
 
 - name: Add Microsoft apt repository for MDATP
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=arm64,armhf,amd64] https://packages.microsoft.com/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/prod {{ ansible_distribution_release | lower }} main"
-    update_cache: yes
-    state: present
-    filename: "microsoft-{{ mde_channel }}"
+  ansible.builtin.deb822_repository:
+    name: "microsoft-{{ mde_channel }}"
+    types: deb
+    uris: "https://packages.microsoft.com/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/{{ mde_channel }}"
+    suites: "{{ ansible_distribution_release | lower }}"
+    components:
+      - main
+    architectures: arm64,armhf,amd64
+    signed_by: https://packages.microsoft.com/keys/microsoft.asc
+  notify:
+    - Update apt cache
   when: ansible_os_family == "Debian"
 
 - name: Add Microsoft DNF/YUM key

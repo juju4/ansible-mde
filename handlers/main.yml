@@ -1,5 +1,9 @@
 ---
 
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
 - name: Restart mdatp
   ansible.builtin.service:
     name: mdatp
