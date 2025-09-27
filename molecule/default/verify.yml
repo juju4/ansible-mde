@@ -100,7 +100,7 @@
               # Enforcing fine only on RHEL/Centos8 by default. Extra config needed on 7.
               - "'enforcing' in selinux.stdout"
               - "'Error' not in selinux.stdout"
-              - not selinux.stderr|string
+              - not (selinux.stderr | length > 0)
           when:
             - ansible_os_family == "RedHat"
             - mde_selinux is not defined or mde_selinux|bool
@@ -128,7 +128,7 @@
               - "'Auditd rules for MDATP (EDR) audisp sensor' in mdatp_rules.stdout"
               - "'-k mdatp' in mdatp_rules.stdout"
               - "'Error' not in mdatp_rules.stdout"
-              - not mdatp_rules.stderr|string
+              - not (mdatp_rules.stderr | length > 0)
 
         - name: Configuration | Linux | Get auditd active rules
           ansible.builtin.command: auditctl -l
@@ -141,7 +141,7 @@
             that:
               - "'key=mdatp' in auditctl.stdout"
               - "'Error' not in auditctl.stdout"
-              - not auditctl.stderr|string
+              - not (auditctl.stderr | length > 0)
 
         - name: Logs | Linux | Get microsoft_defender_core_err.log
           ansible.builtin.stat:
@@ -170,7 +170,7 @@
               # - "'Error' not in log3.stdout"
               # - "'warning' not in log3.stdout"
               # - "'[warning]: [event<ipc_filesystem_message, EdrOpenMessages>]: Dropped messages: ' not in log3.stdout"
-              - not log3.stderr|string
+              - (log3.stderr | length <= 0)
 
     - name: Linux/Darwin
       when: ansible_system == "Linux" or ansible_os_family == "Darwin"
@@ -245,8 +245,8 @@
             that:
               - mde_org_id in org_id.stdout
               - "'Error' not in org_id.stdout"
-              - not org_id.stderr | string
-          when: mde_org_id | string
+              - org_id.stderr | length <= 0
+          when: mde_org_id | length > 0
 
         - name: Configuration | Linux | Get managed json stats
           ansible.builtin.stat:
@@ -261,7 +261,7 @@
               - s_managed_json.stat.pw_name == 'root'
           when:
             - ansible_system == "Linux"
-            - mde_tags|string or mde_proxy_host|string or mde_managed|bool
+            - (mde_tags | length > 0) or (mde_proxy_host | length > 0) or mde_managed|bool
 
         - name: Configuration | Linux | Check managed json is valid json
           ansible.builtin.command: python -m json.tool /etc/opt/microsoft/mdatp/managed/mdatp_managed.json
@@ -272,10 +272,10 @@
           ansible.builtin.assert:
             that:
               - "'Error' not in managed_json_valid.stdout"
-              - not managed_json_valid.stderr|string
+              - not managed_json_valid.stderr| length > 0
           when:
             - ansible_system == "Linux"
-            - mde_tags|string or mde_proxy_host|string or mde_managed|bool
+            - (mde_tags | length > 0) or (mde_proxy_host | length > 0) or mde_managed|bool
 
         - name: Configuration | Linux | Get managed json file
           ansible.builtin.command: cat /etc/opt/microsoft/mdatp/managed/mdatp_managed.json
@@ -288,21 +288,21 @@
               - "'\"tags\": ' in managed_json.stdout"
               - mde_tags in managed_json.stdout
               - "'Error' not in managed_json.stdout"
-              - not managed_json.stderr|string
+              - not managed_json.stderr| length > 0
           when:
             - ansible_system == "Linux"
-            - mde_tags|string
+            - mde_tags| length > 0
 
         - name: Configuration | Linux | Validate proxy
           ansible.builtin.assert:
             that:
               - "'\"proxy\": \"http://{{ mde_proxy_host }}:{{ mde_proxy_port }}\"' in managed_json.stdout"
               - "'Error' not in managed_json.stdout"
-              - not managed_json.stderr|string
+              - not managed_json.stderr| length > 0
           when:
             - ansible_system == "Linux"
-            - mde_proxy_host|string
-            - mde_proxy_port|string
+            - mde_proxy_host| length > 0
+            - mde_proxy_port| length > 0
 
         - name: Configuration | Linux | Get systemd unit file
           ansible.builtin.command: cat /usr/lib/systemd/system/mdatp.service
@@ -315,11 +315,11 @@
               - "'Description=Microsoft Defender' in systemd.stdout"
               - "'Environment=\"HTTPS_PROXY=http://{{ mde_proxy_host }}:{{ mde_proxy_port }}\"' in systemd.stdout"
               - "'Error' not in systemd.stdout"
-              - not systemd.stderr|string
+              - not systemd.stderr| length > 0
           when:
             - ansible_system == "Linux"
-            - mde_proxy_host|string
-            - mde_proxy_port|string
+            - mde_proxy_host| length > 0
+            - mde_proxy_port| length > 0
 
         - name: Configuration | Get mdatp health
           ansible.builtin.command: mdatp health
@@ -332,7 +332,7 @@
               - "' [managed]' in health1.stdout"
               - "'Error' not in health1.stdout"
               - "'Could not connect to the daemon' not in health1.stdout"
-              - not health1.stderr|string
+              - not health1.stderr| length > 0
           when:
             - ansible_system == "Linux"
             - mde_managed|bool
@@ -342,7 +342,7 @@
             that:
               - "('passive_mode_enabled                        : ' + mde_passive_mode_enabled|string|lower) in health1.stdout"
               - "'Error' not in health1.stdout"
-              - not health1.stderr|string
+              - not health1.stderr| length > 0
           when:
             - ansible_system == "Linux"
 
@@ -356,7 +356,7 @@
             that:
               - "'true' in health2.stdout"
               - "'Error' not in health2.stdout"
-              - not health2.stderr|string
+              - not health2.stderr| length > 0
           when:
             - ansible_system == "Linux"
             - mde_healthy
@@ -366,7 +366,7 @@
             that:
               - "'health_issues                               : []' in health1.stdout"
               - "'Error' not in health1.stdout"
-              - not health1.stderr|string
+              - not health1.stderr| length > 0
           when: mde_healthy
 
         - name: Health | Check definitions update
@@ -375,7 +375,7 @@
               - "'definitions_updated_minutes_ago             :' in health1.stdout"
               - "'definitions_status                          : \"up_to_date\"' in health1.stdout"
               - "'Error' not in health1.stdout"
-              - not health1.stderr|string
+              - not health1.stderr| length > 0
           when: mde_license_onboarded | bool
 
         - name: Health | Test network connectivity
@@ -389,7 +389,7 @@
               - "'Testing connection' in net.stdout"
               - "'OK' in net.stdout"
               - "'Error' not in net.stdout"
-              - not net.stderr|string
+              - not net.stderr| length > 0
           when:
             - ansible_system == "Linux"
             - mde_license_onboarded | bool
@@ -483,7 +483,7 @@
             that:
               - "mde_org_id in r_onboarding_info.value"
           when:
-            - mde_org_id|string
+            - mde_org_id| length > 0
 
         - name: Configuration | MDE Tags
           ansible.windows.win_reg_stat:
@@ -496,7 +496,7 @@
             that:
               - "mde_tags in r_group.value"
           when:
-            - mde_tags|string
+            - mde_tags| length > 0
 
         - name: Configuration | MDE Passive mode
           ansible.windows.win_reg_stat:

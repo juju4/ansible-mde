@@ -28,4 +28,4 @@
     group: root
   when:
     - not mdatp_onboard.stat.exists
-    - mde_onboarding_zip|string
+    - mde_onboarding_zip | length > 0
