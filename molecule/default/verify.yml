@@ -13,17 +13,17 @@
     mde_license_onboarded: false
     is_container: false
   pre_tasks:
-    - name: Debug | var ansible_virtualization_type
+    - name: Debug | var ansible_facts['virtualization_type']
       ansible.builtin.debug:
-        var: ansible_virtualization_type
+        var: ansible_facts['virtualization_type']
     - name: Set fact is_container
       ansible.builtin.set_fact:
         is_container: true
       when: >
-        (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker"
-           or ansible_virtualization_type == "containerd"
-           or ansible_virtualization_type == "container"
+        (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker"
+           or ansible_facts['virtualization_type'] == "containerd"
+           or ansible_facts['virtualization_type'] == "container"
           )
         )
     - name: Linux | Set fact
@@ -36,11 +36,11 @@
         mde_log2: '/var/log/microsoft/mdatp/microsoft_defender_core.log'
         mde_log3: '/var/log/microsoft/mdatp/microsoft_defender_core_err.log'
         mde_log_user: mdatp
-      when: ansible_system == "Linux"
+      when: ansible_facts['system'] == "Linux"
     - name: RedHat8 | Set fact
       ansible.builtin.set_fact:
         mde_log_user: root
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version | int == 8
+      when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] | int == 8
     - name: Darwin | Set fact
       ansible.builtin.set_fact:
         mde_dir: '/opt/microsoft/mdatp'
@@ -49,15 +49,15 @@
         mde_log1: '/var/log/microsoft/mdatp/microsoft_defender.log'
         mde_log2: '/var/log/microsoft/mdatp/microsoft_defender_core.log'
         mde_log_user: root
-      when: ansible_os_family == "Darwin"
+      when: ansible_facts['os_family'] == "Darwin"
     - name: Windows | Set fact
       ansible.builtin.set_fact:
         mde_dir: 'C:\Program Files\Windows Defender Advanced Threat Protection'
         mde_bin: 'C:\Program Files\Windows Defender Advanced Threat Protection\MsSense.exe'
-      when: ansible_os_family == "Windows"
+      when: ansible_facts['os_family'] == "Windows"
   tasks:
     - name: Linux
-      when: ansible_system == "Linux"
+      when: ansible_facts['system'] == "Linux"
       block:
         - name: Collect packages information
           ansible.builtin.package_facts:
@@ -102,7 +102,7 @@
               - "'Error' not in selinux.stdout"
               - not (selinux.stderr | length > 0)
           when:
-            - ansible_os_family == "RedHat"
+            - ansible_facts['os_family'] == "RedHat"
             - mde_selinux is not defined or mde_selinux|bool
 
         - name: Configuration | Linux | Get mdatp auditd rules stats
@@ -173,7 +173,7 @@
               - (log3.stderr | length <= 0)
 
     - name: Linux/Darwin
-      when: ansible_system == "Linux" or ansible_os_family == "Darwin"
+      when: ansible_facts['system'] == "Linux" or ansible_facts['os_family'] == "Darwin"
       block:
         - name: Get directory stats
           ansible.builtin.stat:
@@ -260,7 +260,7 @@
               - s_managed_json.stat.mode == '0644'
               - s_managed_json.stat.pw_name == 'root'
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - (mde_tags | length > 0) or (mde_proxy_host | length > 0) or mde_managed|bool
 
         - name: Configuration | Linux | Check managed json is valid json
@@ -274,7 +274,7 @@
               - "'Error' not in managed_json_valid.stdout"
               - not managed_json_valid.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - (mde_tags | length > 0) or (mde_proxy_host | length > 0) or mde_managed|bool
 
         - name: Configuration | Linux | Get managed json file
@@ -290,7 +290,7 @@
               - "'Error' not in managed_json.stdout"
               - not managed_json.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - mde_tags| length > 0
 
         - name: Configuration | Linux | Validate proxy
@@ -300,7 +300,7 @@
               - "'Error' not in managed_json.stdout"
               - not managed_json.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - mde_proxy_host| length > 0
             - mde_proxy_port| length > 0
 
@@ -317,7 +317,7 @@
               - "'Error' not in systemd.stdout"
               - not systemd.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - mde_proxy_host| length > 0
             - mde_proxy_port| length > 0
 
@@ -334,7 +334,7 @@
               - "'Could not connect to the daemon' not in health1.stdout"
               - not health1.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - mde_managed|bool
 
         - name: Configuration | Check if passive mode is set at expected value
@@ -344,7 +344,7 @@
               - "'Error' not in health1.stdout"
               - not health1.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
 
         - name: Configuration | Get mdatp health boolean
           ansible.builtin.command: mdatp health --field healthy
@@ -358,7 +358,7 @@
               - "'Error' not in health2.stdout"
               - not health2.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - mde_healthy
 
         - name: Health | Check if healthy2
@@ -391,7 +391,7 @@
               - "'Error' not in net.stdout"
               - not net.stderr| length > 0
           when:
-            - ansible_system == "Linux"
+            - ansible_facts['system'] == "Linux"
             - mde_license_onboarded | bool
 
         - name: Logs | Get microsoft_defender.log
@@ -406,8 +406,8 @@
               - s_log1.stat.mode == '0660'
               - s_log1.stat.pw_name == mde_log_user
           when:
-            - not (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
-            - not (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 22)
+            - not (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] | int >= 8)
+            - not (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] | int >= 22)
 
         - name: Logs | Get microsoft_defender_core.log
           ansible.builtin.stat:
@@ -424,7 +424,7 @@
               - (s_log2.stat.mtime|int - (ansible_date_time.epoch|int - 900)) > 0
 
     - name: Windows
-      when: ansible_os_family == "Windows"
+      when: ansible_facts['os_family'] == "Windows"
       block:
         - name: Win | Get directory stats
           ansible.windows.win_stat:
