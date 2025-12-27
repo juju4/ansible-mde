@@ -1,7 +1,7 @@
 ---
 
 - name: Debian
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
   block:
     - name: Debian | Ensure curl and gnupg are present
       ansible.builtin.package:
@@ -21,8 +21,8 @@
       ansible.builtin.deb822_repository:
         name: "microsoft-{{ mde_channel }}"
         types: deb
-        uris: "https://packages.microsoft.com/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/{{ mde_channel }}"
-        suites: "{{ ansible_distribution_release | lower }}"
+        uris: "https://packages.microsoft.com/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_version'] }}/{{ mde_channel }}"
+        suites: "{{ ansible_facts['distribution_release'] | lower }}"
         components:
           - main
         architectures: arm64,armhf,amd64
@@ -34,15 +34,15 @@
   ansible.builtin.rpm_key:
     state: present
     key: https://packages.microsoft.com/keys/microsoft.asc
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Add  Microsoft yum repository for MDATP
   ansible.builtin.yum_repository:
     name: "packages-microsoft-{{ mde_channel }}"
     description: Microsoft Defender for Endpoint
     file: "microsoft-{{ mde_channel }}"
-    baseurl: "https://packages.microsoft.com/rhel/{{ ansible_distribution_major_version }}/{{ mde_channel }}/"
+    baseurl: "https://packages.microsoft.com/rhel/{{ ansible_facts['distribution_major_version'] }}/{{ mde_channel }}/"
     gpgcheck: yes
     gpgkey: "https://packages.microsoft.com/keys/microsoft.asc"
     enabled: Yes
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
