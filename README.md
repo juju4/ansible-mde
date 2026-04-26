@@ -53,6 +53,7 @@ $ MOLECULE_DISTRO=ubuntu:20.04 molecule test --destroy=never
 
 * [Common mistakes to avoid when defining exclusions, MDE](https://learn.microsoft.com/en-us/defender-endpoint/common-exclusion-mistakes-microsoft-defender-antivirus)
 * [Important points about exclusions](https://learn.microsoft.com/en-us/defender-endpoint/configure-exclusions-microsoft-defender-antivirus#important-points-about-exclusions)
+* [This tool is designed to assist you in analyzing issues related to Defender for Endpoint on your local endpoint. It offers a centralized view of the security configuration, log files, updates, and provides access to the Performance Analyzer.](https://github.com/v3rtho/MDE-troubleshooter)
 
 ## License
 
