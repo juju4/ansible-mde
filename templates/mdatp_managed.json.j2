@@ -1,6 +1,6 @@
 {
     "antivirusEngine": {
-        "enforcementLevel": "real_time",
+        "enforcementLevel": "{{ mde_enforcementlevel }}",
         "scanAfterDefinitionUpdate": true,
         "scanArchives": true,
         "maximumOnDemandScanThreads": 2,
@@ -50,7 +50,7 @@
         ]
     },
     "cloudService": {
-        "enabled": true,
+        "enabled": {{ mde_cloudservice_enabled | bool | lower }},
         "diagnosticLevel": "optional",
         "automaticSampleSubmissionConsent": "safe",
         "automaticDefinitionUpdateEnabled": true,
