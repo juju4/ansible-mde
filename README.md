@@ -1,7 +1,7 @@
-[![Actions Status - Master](https://github.com/juju4/ansible-mde/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-mde/actions?query=branch%3Amaster)
-[![Actions Status - Devel](https://github.com/juju4/ansible-mde/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-mde/actions?query=branch%3Adevel)
-
 # mde ansible role
+
+[![Actions Status - Main](https://github.com/juju4/ansible-mde/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-mde/actions?query=branch%3Amain)
+[![Actions Status - Devel](https://github.com/juju4/ansible-mde/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-mde/actions?query=branch%3Adevel)
 
 Setup Microsoft Defender for Endpoint
 * https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-defender-endpoint-linux?view=o365-worldwide
