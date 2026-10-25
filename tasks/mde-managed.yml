@@ -11,4 +11,6 @@
     src: "{{ mde_managedjson_template }}"
     dest: /etc/opt/microsoft/mdatp/managed/mdatp_managed.json
     mode: '0644'
+    owner: root
+    group: root
     validate: 'python3 -m json.tool %s'
