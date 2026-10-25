@@ -8,6 +8,7 @@ mde_onboarding_zip: ''
 mde_managed: true
 mde_managedjson_template: mdatp_managed.json.j2
 # https://learn.microsoft.com/en-us/defender-endpoint/linux-preferences#full-configuration-profile-example
+mde_behaviormonitoring: "enabled"
 mde_enforcementlevel: "real_time"
 # mde_enforcementlevel: "passive"
 mde_cloudservice_enabled: true
